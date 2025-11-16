@@ -3,17 +3,17 @@
 description=Removes smooth steering filtering
 patch=0,EE,101709e4,extended,3f80 // default value 3c88 
 
-[Speed Steering Reduction\Reduce Speed Steering Reduction]
+[Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
 description=Reduces the speed-based steering reduction effect
 // replace reading the value from car data to static 18.0
 patch=0,EE,0016c270,word,3C024190 // lw to lui
 patch=0,EE,0016C274,word,44820800 // lwc1 to mtc1
 
-[Speed Steering Reduction\Disable Speed Steering Reduction]
+[Steering Reduction (Choose one)\Disable Speed Steering Reduction]
 description=Completely disables the speed-based steering reduction effect
 patch=0,EE,0016c264,extended,FF
 
-[Deadzone\Reduce Steering Deadzone]
+[Deadzone (Choose one)\Reduce Steering Deadzone]
 description=Reduces the steering deadzone to minimum
 // Deadzone low
 patch=0,EE,003d54a4,word,3d4ccccd // 0.05
@@ -22,7 +22,7 @@ patch=0,EE,003d54a8,word,3f19999a // 0.6
 // Deadzone high
 patch=0,EE,003d54ac,word,3f733333 // 0.95
 
-[Deadzone\Disable Steering Deadzone]
+[Deadzone (Choose one)\Disable Steering Deadzone]
 description=Disables the steering deadzone completely
 // Deadzone low
 patch=0,EE,003d54a4,word,00000000 // 0.0

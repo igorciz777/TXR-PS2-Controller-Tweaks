@@ -3,12 +3,12 @@
 description=Removes smooth steering filtering
 patch=0,EE,0018eaf4,word,00000000
 
-[Speed Steering Reduction\Reduce Speed Steering Reduction]
+[Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
 description=Reduces the speed-based steering reduction effect
 // halfs the effect's strength
 patch=0,EE,10272784,extended,3FE6 // 1.8
 
-[Speed Steering Reduction\Disable Speed Steering Reduction]
+[Steering Reduction (Choose one)\Disable Speed Steering Reduction]
 description=Completely disables the speed-based steering reduction effect
 patch=0,EE,10272784,extended,0000 // 0.0
 
