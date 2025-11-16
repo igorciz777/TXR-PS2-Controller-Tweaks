@@ -28,5 +28,5 @@ author=igorciz777
 patch=0,EE,101C84A8,extended,0000 // 0.0
 patch=0,EE,101C84AC,extended,0000
 // Deadzone mid
-patch=0,EE,101C84C8,extended,3f00 // 0.5
-patch=0,EE,101C84CC,extended,0000
+patch=0,EE,101C84C4,extended,3f00 // 0.5
+patch=0,EE,101C84C8,extended,0000
