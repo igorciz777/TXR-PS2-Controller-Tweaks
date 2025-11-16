@@ -1,20 +1,24 @@
 // TXR DRIFT 2
 [Disable Smooth Steering]
 description=Removes smooth steering filtering
+author=igorciz777
 patch=0,EE,101713F4,extended,3f80 // default value 3c88 
 
 [Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
 description=Reduces the speed-based steering reduction effect
+author=igorciz777
 // replace reading the value from car data to static 18.0
 patch=0,EE,0016cc80,word,3C024190 // lw to lui
 patch=0,EE,0016cc84,word,44820800 // lwc1 to mtc1
 
 [Steering Reduction (Choose one)\Disable Speed Steering Reduction]
 description=Completely disables the speed-based steering reduction effect
+author=igorciz777
 patch=0,EE,0016cc74,extended,FF
 
 [Deadzone (Choose one)\Reduce Steering Deadzone]
 description=Reduces the steering deadzone to minimum
+author=igorciz777
 // Deadzone low
 patch=0,EE,003d6bc4,word,3d4ccccd // 0.05
 // Deadzone mid
@@ -24,6 +28,7 @@ patch=0,EE,003d6bcc,word,3f733333 // 0.95
     
 [Deadzone (Choose one)\Disable Steering Deadzone]
 description=Disables the steering deadzone completely
+author=igorciz777
 // Deadzone low
 patch=0,EE,003d6bc4,word,00000000 // 0.0
 // Deadzone mid

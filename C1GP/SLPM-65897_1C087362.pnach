@@ -1,13 +1,16 @@
 // RACING BATTLE C1 GRAND PRIX
 [Disable Smooth Steering]
 description=Removes smooth steering filtering
+author=igorciz777
 patch=0,EE,00179AD4,word,00000000
 
 [Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
 description=Reduces the speed-based steering reduction effect
+author=igorciz777
 // halfs the effect's strength
 patch=0,EE,101761a4,extended,3FE6 // 1.8
 
 [Steering Reduction (Choose one)\Disable Speed Steering Reduction]
 description=Completely disables the speed-based steering reduction effect
+author=igorciz777
 patch=0,EE,101761a4,extended,0000 // 0.0
