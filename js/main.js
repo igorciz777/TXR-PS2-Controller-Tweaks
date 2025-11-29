@@ -17,25 +17,7 @@ function getValueFromPercentage(range, percent, isInverse = false, percentMax = 
     const { min, max } = range;
     const defaultVal = parseFloat(range.value);
     const clampedPercent = Math.min(Math.max(percent, 0), percentMax);
-
-    if (percentMax === 100) {
-        const ratio = clampedPercent / 100;
-        const value = isInverse
-            ? max - (max - min) * ratio
-            : min + (max - min) * ratio;
-        return parseFloat(value.toFixed(8));
-    }
-
-    // percentMax > 100 (e.g. 200) -> treat 0..100 as min..default and 100..percentMax as default..max
     const halfMax = 100;
-    if (!isFinite(defaultVal) || defaultVal <= min || defaultVal >= max) {
-        // fallback to linear mapping across whole range
-        const ratio = clampedPercent / percentMax;
-        const value = isInverse
-            ? max - (max - min) * ratio
-            : min + (max - min) * ratio;
-        return parseFloat(value.toFixed(8));
-    }
 
     if (!isInverse) {
         if (clampedPercent <= halfMax) {
@@ -48,7 +30,6 @@ function getValueFromPercentage(range, percent, isInverse = false, percentMax = 
             return parseFloat(value.toFixed(8));
         }
     } else {
-        // inverse mapping: 0 -> max, 100 -> default, 200 -> min
         if (clampedPercent <= halfMax) {
             const ratio = clampedPercent / halfMax;
             const value = max - (max - defaultVal) * ratio;
@@ -78,7 +59,6 @@ function getPercentageFromValue(range, value, isInverse = false, percentMax = 10
             return parseFloat(pct.toFixed(8));
         }
     } else {
-        // inverse: 0 -> max, 100 -> default, 200 -> min
         if (clampedValue >= defaultVal) {
             const denom = (max - defaultVal);
             const pct = denom === 0 ? 0 : ((max - clampedValue) / denom) * halfMax;
@@ -94,13 +74,12 @@ function getPercentageFromValue(range, value, isInverse = false, percentMax = 10
 function applyGameConfig(gameKey) {
     if (!gameConfigs) return;
     const cfg = gameConfigs[gameKey];
-    if (!cfg){
+    if (!cfg) {
         console.warn(`No config found for game key: ${gameKey}`);
         return;
     }
     const r = cfg.ranges;
     // smoothing
-    // allow up to 200% (stronger effect)
     const PCT_MAX = 200;
     smoothingRange.min = 0;
     smoothingRange.max = PCT_MAX;
@@ -113,7 +92,7 @@ function applyGameConfig(gameKey) {
     const smoothingPctEl = document.getElementById('smoothingPercent');
     if (smoothingPctEl) smoothingPctEl.textContent = `${parseFloat(smoothingRange.value).toFixed(0)}%`;
 
-    // deadzone (steering low)
+    // steering deadzone
     deadzoneLowRange.min = r.deadzone_low.min;
     deadzoneLowRange.max = r.deadzone_low.max;
     deadzoneLowRange.step = r.deadzone_low.step;
@@ -123,7 +102,6 @@ function applyGameConfig(gameKey) {
     deadzoneLowNumber.step = r.deadzone_low.step;
     deadzoneLowNumber.value = r.deadzone_low.value;
 
-    // deadzone (steering high)
     deadzoneHighRange.min = r.deadzone_high.min;
     deadzoneHighRange.max = r.deadzone_high.max;
     deadzoneHighRange.step = r.deadzone_high.step;
@@ -141,6 +119,7 @@ function applyGameConfig(gameKey) {
     deadzoneMidNumber.max = r.midpoint.max;
     deadzoneMidNumber.step = r.midpoint.step;
     deadzoneMidNumber.value = r.midpoint.value;
+
     // throttle deadzone
     throttleLowRange.min = r.deadzone_low.min;
     throttleLowRange.max = r.deadzone_low.max;
@@ -159,7 +138,7 @@ function applyGameConfig(gameKey) {
     throttleMidNumber.max = r.deadzone_low.max;
     throttleMidNumber.step = r.deadzone_low.step;
     throttleMidNumber.value = r.midpoint.value;
-    
+
     throttleHighRange.min = r.deadzone_high.min;
     throttleHighRange.max = r.deadzone_high.max;
     throttleHighRange.step = r.deadzone_high.step;
@@ -198,7 +177,6 @@ function applyGameConfig(gameKey) {
     brakeHighNumber.value = r.deadzone_high.value;
 
     // reduction
-    // allow up to 200% (stronger effect)
     reductionRange.min = 0;
     reductionRange.max = PCT_MAX;
     reductionRange.step = Math.max(0.01, (r.reduction.step / (r.reduction.max - r.reduction.min)) * PCT_MAX);
@@ -228,7 +206,6 @@ function applyGameConfig(gameKey) {
     ].forEach(cb => cb.dispatchEvent(new Event('change')));
 }
 
-// generate preview now supports steering low/high and throttle/brake low/high
 function generatePnachPreview(gameKey, values) {
     if (!gameConfigs) return '';
     const cfg = gameConfigs[gameKey];
@@ -239,7 +216,7 @@ function generatePnachPreview(gameKey, values) {
         '{{SMOOTHING_LO}}': values.smoothingDisabled ? 'DISABLED' : floatToHex(parseFloat(values.smoothing), 0, 4),
         '{{SMOOTHING_HI}}': values.smoothingDisabled ? 'DISABLED' : floatToHex(parseFloat(values.smoothing), 4, 8),
 
-        // steering deadzone low/high (keeps compatibility with existing templates)
+        // steering deadzone
         '{{DEADZONE_LOW}}': values.deadzoneLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneLow), 0, 8),
         '{{DEADZONE_LOW_LO}}': values.deadzoneLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneLow), 0, 4),
         '{{DEADZONE_LOW_HI}}': values.deadzoneLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneLow), 4, 8),
@@ -248,7 +225,6 @@ function generatePnachPreview(gameKey, values) {
         '{{DEADZONE_HIGH_LO}}': values.deadzoneHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneHigh), 0, 4),
         '{{DEADZONE_HIGH_HI}}': values.deadzoneHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneHigh), 4, 8),
 
-        // mid deadzone
         '{{DEADZONE_MID}}': values.deadzoneMidDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneMid), 0, 8) || '00000000',
         '{{DEADZONE_MID_LO}}': values.deadzoneMidDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneMid), 0, 4) || '0000',
         '{{DEADZONE_MID_HI}}': values.deadzoneMidDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneMid), 4, 8) || '0000',
@@ -289,7 +265,6 @@ function generatePnachPreview(gameKey, values) {
     return out;
 }
 
-// updatePreview expanded to pass throttle/brake values
 function updatePreview() {
     const payload = {
         smoothing: smoothingNumber.value,
@@ -297,7 +272,7 @@ function updatePreview() {
         deadzoneLow: deadzoneLowNumber.value,
         deadzoneLowDisabled: deadzoneLowDisable.checked,
         deadzoneMid: deadzoneMidNumber.value,
-        deadzoneMidDisabled: false, // mid has no separate disable control
+        deadzoneMidDisabled: false,
         deadzoneHigh: deadzoneHighNumber.value,
         deadzoneHighDisabled: deadzoneHighDisable.checked,
 
@@ -321,107 +296,106 @@ function updatePreview() {
     const preview = generatePnachPreview(gameSelect.value, payload);
     if (pnachOutput) pnachOutput.value = preview;
 
-    // update chart when preview changes
     if (updateDeadzoneChart) updateDeadzoneChart(payload);
 }
 
 function mapInput(x, LOW, MID, HIGH) {
-	if (x < LOW) return 0;
-	if (x < MID) {
-		return ((x - LOW) / (MID - LOW)) * 0.5;
-	}
-	if (x < HIGH) {
-		return ((x - MID) / (HIGH - MID)) * 0.5 + 0.5;
-	}
-	return 1;
+    if (x < LOW) return 0;
+    if (x < MID) {
+        return ((x - LOW) / (MID - LOW)) * 0.5;
+    }
+    if (x < HIGH) {
+        return ((x - MID) / (HIGH - MID)) * 0.5 + 0.5;
+    }
+    return 1;
 }
 function generateDataFor(LOW, MID, HIGH) {
-	let ys = [];
-	for (let i = 0; i <= 100; i++) {
-		const x = i / 100;
-		ys.push(mapInput(x, LOW, MID, HIGH));
-	}
-	return ys;
+    let ys = [];
+    for (let i = 0; i <= 100; i++) {
+        const x = i / 100;
+        ys.push(mapInput(x, LOW, MID, HIGH));
+    }
+    return ys;
 }
 
 function makeMiniChart(canvasEl, color) {
-	if (!canvasEl) return null;
-	const ctx = canvasEl.getContext('2d');
-	return new Chart(ctx, {
-		type: 'line',
-		data: {
-			labels: Array.from({ length: 101 }, (_, i) => parseFloat((i / 100).toFixed(2))),
-			datasets: [{ data: [], borderColor: color, borderWidth: 2, pointRadius: 0 }]
-		},
-		options: {
-			animation: false,
-			aspectRatio: 1,
-			scales: {
+    if (!canvasEl) return null;
+    const ctx = canvasEl.getContext('2d');
+    return new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: Array.from({ length: 101 }, (_, i) => parseFloat((i / 100).toFixed(2))),
+            datasets: [{ data: [], borderColor: color, borderWidth: 2, pointRadius: 0 }]
+        },
+        options: {
+            animation: false,
+            aspectRatio: 1,
+            scales: {
                 x: {
-					display: true,
-					min: 0,
-					max: 1,
-					grid: { color: '#adb5bd50' },
-					ticks: {
-						callback: function(value) { return parseFloat(value/100).toString(); }
-					}
-				},
+                    display: true,
+                    min: 0,
+                    max: 1,
+                    grid: { color: '#adb5bd50' },
+                    ticks: {
+                        callback: function (value) { return parseFloat(value / 100).toString(); }
+                    }
+                },
                 y: {
-					display: true,
-					min: 0,
-					max: 1,
-					grid: { color: '#adb5bd50' },
-					ticks: {
-						callback: function(value) { return parseFloat(value).toString(); }
-					}
-				}
+                    display: true,
+                    min: 0,
+                    max: 1,
+                    grid: { color: '#adb5bd50' },
+                    ticks: {
+                        callback: function (value) { return parseFloat(value).toString(); }
+                    }
+                }
             },
-			plugins: { legend: { display: false }, tooltip: { enabled: false } }
-		}
-	});
+            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+        }
+    });
 }
 
 function initDeadzoneCharts() {
-	const steerCanvas = document.getElementById('deadzoneChartSteer');
-	const throttleCanvas = document.getElementById('deadzoneChartThrottle');
-	const brakeCanvas = document.getElementById('deadzoneChartBrake');
+    const steerCanvas = document.getElementById('deadzoneChartSteer');
+    const throttleCanvas = document.getElementById('deadzoneChartThrottle');
+    const brakeCanvas = document.getElementById('deadzoneChartBrake');
 
-	deadzoneCharts.steer = makeMiniChart(steerCanvas, '#4e79a7');
-	deadzoneCharts.throttle = makeMiniChart(throttleCanvas, '#59a14f');
-	deadzoneCharts.brake = makeMiniChart(brakeCanvas, '#e15759');
+    deadzoneCharts.steer = makeMiniChart(steerCanvas, '#4e79a7');
+    deadzoneCharts.throttle = makeMiniChart(throttleCanvas, '#59a14f');
+    deadzoneCharts.brake = makeMiniChart(brakeCanvas, '#e15759');
 }
 
 function updateDeadzoneChart(values) {
-	if (!deadzoneCharts) return;
+    if (!deadzoneCharts) return;
 
-	const sLow = parseFloat(values.deadzoneLowDisabled ? 1.0 : values.deadzoneLow || 0);
+    const sLow = parseFloat(values.deadzoneLowDisabled ? 1.0 : values.deadzoneLow || 0);
     const sMid = parseFloat(values.deadzoneMidDisabled ? 1.0 : values.deadzoneMid || 0.5);
-	const sHigh = parseFloat(values.deadzoneHighDisabled ? 1.0 : values.deadzoneHigh || 1);
-	const tLow = parseFloat(values.throttleLowDisabled ? 1.0 : values.throttleLow || 0);
+    const sHigh = parseFloat(values.deadzoneHighDisabled ? 1.0 : values.deadzoneHigh || 1);
+    const tLow = parseFloat(values.throttleLowDisabled ? 1.0 : values.throttleLow || 0);
     const tMid = parseFloat(values.throttleMidDisabled ? 1.0 : values.throttleMid || 0.5);
-	const tHigh = parseFloat(values.throttleHighDisabled ? 1.0 : values.throttleHigh || 1);
-	const bLow = parseFloat(values.brakeLowDisabled ? 1.0 : values.brakeLow || 0);
+    const tHigh = parseFloat(values.throttleHighDisabled ? 1.0 : values.throttleHigh || 1);
+    const bLow = parseFloat(values.brakeLowDisabled ? 1.0 : values.brakeLow || 0);
     const bMid = parseFloat(values.brakeMidDisabled ? 1.0 : values.brakeMid || 0.5);
-	const bHigh = parseFloat(values.brakeHighDisabled ? 1.0 : values.brakeHigh || 1);
+    const bHigh = parseFloat(values.brakeHighDisabled ? 1.0 : values.brakeHigh || 1);
 
-	if (deadzoneCharts.steer) {
-		deadzoneCharts.steer.data.datasets[0].data = generateDataFor(sLow, sMid, sHigh);
-		deadzoneCharts.steer.update('none');
-	}
-	if (deadzoneCharts.throttle) {
-		deadzoneCharts.throttle.data.datasets[0].data = generateDataFor(tLow, tMid, tHigh);
-		deadzoneCharts.throttle.update('none');
-	}
-	if (deadzoneCharts.brake) {
-		deadzoneCharts.brake.data.datasets[0].data = generateDataFor(bLow, bMid, bHigh);
-		deadzoneCharts.brake.update('none');
-	}
+    if (deadzoneCharts.steer) {
+        deadzoneCharts.steer.data.datasets[0].data = generateDataFor(sLow, sMid, sHigh);
+        deadzoneCharts.steer.update('none');
+    }
+    if (deadzoneCharts.throttle) {
+        deadzoneCharts.throttle.data.datasets[0].data = generateDataFor(tLow, tMid, tHigh);
+        deadzoneCharts.throttle.update('none');
+    }
+    if (deadzoneCharts.brake) {
+        deadzoneCharts.brake.data.datasets[0].data = generateDataFor(bLow, bMid, bHigh);
+        deadzoneCharts.brake.update('none');
+    }
 }
 
 const syncPair = (rangeEl, numEl, disableEl = null) => {
     rangeEl.addEventListener('input', () => { if (!disableEl || !disableEl.checked) numEl.value = rangeEl.value; });
     numEl.addEventListener('input', () => { if (!disableEl || !disableEl.checked) rangeEl.value = numEl.value; });
-    if(disableEl){
+    if (disableEl) {
         disableEl.addEventListener('change', () => {
             const disabled = disableEl.checked;
             rangeEl.disabled = disabled;
@@ -430,7 +404,6 @@ const syncPair = (rangeEl, numEl, disableEl = null) => {
     }
 };
 
-// helper to sync a percentage slider (0-100) with a raw-number input using gameConfigs ranges
 function syncPercentPair(percentRangeEl, percentLabelEl, numEl, disableEl = null, getCfgRange = () => null) {
     const updateLabel = (v) => { if (percentLabelEl) percentLabelEl.textContent = `${parseFloat(v).toFixed(0)}%`; };
 
@@ -512,7 +485,6 @@ const downloadBtn = document.getElementById('downloadBtn');
 const pnachOutput = document.getElementById('pnachOutput');
 const resetBtn = document.getElementById('resetBtn');
 
-// declare chart holders early so they're defined before any preview/update runs
 let deadzoneCharts = { steer: null, throttle: null, brake: null };
 
 // steering smoothing
@@ -539,7 +511,7 @@ syncPair(brakeLowRange, brakeLowNumber, brakeLowDisable);
 syncPair(brakeMidRange, brakeMidNumber);
 syncPair(brakeHighRange, brakeHighNumber, brakeHighDisable);
 
-// steering reduction (percent slider -> raw value)
+// steering reduction
 syncPercentPair(
     reductionRange,
     document.getElementById('reductionPercent'),
@@ -550,21 +522,21 @@ syncPercentPair(
 
 // wire inputs to live update
 [
-	smoothingRange, smoothingNumber, smoothingDisable,
-	deadzoneLowRange, deadzoneLowNumber, deadzoneLowDisable,
-	deadzoneMidRange, deadzoneMidNumber,
-	deadzoneHighRange, deadzoneHighNumber, deadzoneHighDisable,
-	throttleLowRange, throttleLowNumber, throttleLowDisable,
-	throttleMidRange, throttleMidNumber,
-	throttleHighRange, throttleHighNumber, throttleHighDisable,
-	brakeLowRange, brakeLowNumber, brakeLowDisable,
-	brakeMidRange, brakeMidNumber,
-	brakeHighRange, brakeHighNumber, brakeHighDisable,
-	reductionRange, reductionNumber, reductionDisable
+    smoothingRange, smoothingNumber, smoothingDisable,
+    deadzoneLowRange, deadzoneLowNumber, deadzoneLowDisable,
+    deadzoneMidRange, deadzoneMidNumber,
+    deadzoneHighRange, deadzoneHighNumber, deadzoneHighDisable,
+    throttleLowRange, throttleLowNumber, throttleLowDisable,
+    throttleMidRange, throttleMidNumber,
+    throttleHighRange, throttleHighNumber, throttleHighDisable,
+    brakeLowRange, brakeLowNumber, brakeLowDisable,
+    brakeMidRange, brakeMidNumber,
+    brakeHighRange, brakeHighNumber, brakeHighDisable,
+    reductionRange, reductionNumber, reductionDisable
 ].forEach(el => {
-	if (!el) return;
-	const ev = (el.type === 'checkbox' || el.tagName === 'SELECT') ? 'change' : 'input';
-	el.addEventListener(ev, updatePreview);
+    if (!el) return;
+    const ev = (el.type === 'checkbox' || el.tagName === 'SELECT') ? 'change' : 'input';
+    el.addEventListener(ev, updatePreview);
 });
 
 // game change update
@@ -601,8 +573,8 @@ if (downloadBtn) {
 
 // initial game config
 [smoothingDisable, deadzoneLowDisable, deadzoneHighDisable,
-	throttleLowDisable, throttleHighDisable, brakeLowDisable, brakeHighDisable,
-	reductionDisable].forEach(cb => cb.dispatchEvent(new Event('change')));
+    throttleLowDisable, throttleHighDisable, brakeLowDisable, brakeHighDisable,
+    reductionDisable].forEach(cb => cb.dispatchEvent(new Event('change')));
 applyGameConfig(gameSelect.value);
 
 
