@@ -13,6 +13,84 @@ function floatToHex(floatValue, subStart, subEnd) {
     return hex.substring(subStart, subEnd);
 }
 
+function getValueFromPercentage(range, percent, isInverse = false, percentMax = 100) {
+    const { min, max } = range;
+    const defaultVal = parseFloat(range.value);
+    const clampedPercent = Math.min(Math.max(percent, 0), percentMax);
+
+    if (percentMax === 100) {
+        const ratio = clampedPercent / 100;
+        const value = isInverse
+            ? max - (max - min) * ratio
+            : min + (max - min) * ratio;
+        return parseFloat(value.toFixed(8));
+    }
+
+    // percentMax > 100 (e.g. 200) -> treat 0..100 as min..default and 100..percentMax as default..max
+    const halfMax = 100;
+    if (!isFinite(defaultVal) || defaultVal <= min || defaultVal >= max) {
+        // fallback to linear mapping across whole range
+        const ratio = clampedPercent / percentMax;
+        const value = isInverse
+            ? max - (max - min) * ratio
+            : min + (max - min) * ratio;
+        return parseFloat(value.toFixed(8));
+    }
+
+    if (!isInverse) {
+        if (clampedPercent <= halfMax) {
+            const ratio = clampedPercent / halfMax;
+            const value = min + (defaultVal - min) * ratio;
+            return parseFloat(value.toFixed(8));
+        } else {
+            const ratio = (clampedPercent - halfMax) / halfMax;
+            const value = defaultVal + (max - defaultVal) * ratio;
+            return parseFloat(value.toFixed(8));
+        }
+    } else {
+        // inverse mapping: 0 -> max, 100 -> default, 200 -> min
+        if (clampedPercent <= halfMax) {
+            const ratio = clampedPercent / halfMax;
+            const value = max - (max - defaultVal) * ratio;
+            return parseFloat(value.toFixed(8));
+        } else {
+            const ratio = (clampedPercent - halfMax) / halfMax;
+            const value = defaultVal - (defaultVal - min) * ratio;
+            return parseFloat(value.toFixed(8));
+        }
+    }
+}
+
+function getPercentageFromValue(range, value, isInverse = false, percentMax = 100) {
+    const { min, max } = range;
+    const defaultVal = parseFloat(range.value);
+    const clampedValue = Math.min(Math.max(value, min), max);
+    const halfMax = 100;
+
+    if (!isInverse) {
+        if (clampedValue <= defaultVal) {
+            const denom = (defaultVal - min);
+            const pct = denom === 0 ? 0 : ((clampedValue - min) / denom) * halfMax;
+            return parseFloat(pct.toFixed(8));
+        } else {
+            const denom = (max - defaultVal);
+            const pct = denom === 0 ? halfMax : halfMax + ((clampedValue - defaultVal) / denom) * halfMax;
+            return parseFloat(pct.toFixed(8));
+        }
+    } else {
+        // inverse: 0 -> max, 100 -> default, 200 -> min
+        if (clampedValue >= defaultVal) {
+            const denom = (max - defaultVal);
+            const pct = denom === 0 ? 0 : ((max - clampedValue) / denom) * halfMax;
+            return parseFloat(pct.toFixed(8));
+        } else {
+            const denom = (defaultVal - min);
+            const pct = denom === 0 ? halfMax : halfMax + ((defaultVal - clampedValue) / denom) * halfMax;
+            return parseFloat(pct.toFixed(8));
+        }
+    }
+}
+
 function applyGameConfig(gameKey) {
     if (!gameConfigs) return;
     const cfg = gameConfigs[gameKey];
@@ -22,14 +100,19 @@ function applyGameConfig(gameKey) {
     }
     const r = cfg.ranges;
     // smoothing
-    smoothingRange.min = r.smoothing.min;
-    smoothingRange.max = r.smoothing.max;
-    smoothingRange.step = r.smoothing.step;
-    smoothingRange.value = r.smoothing.value;
+    // allow up to 200% (stronger effect)
+    const PCT_MAX = 200;
+    smoothingRange.min = 0;
+    smoothingRange.max = PCT_MAX;
+    smoothingRange.step = Math.max(0.01, (r.smoothing.step / (r.smoothing.max - r.smoothing.min)) * PCT_MAX);
+    smoothingRange.value = getPercentageFromValue(r.smoothing, parseFloat(r.smoothing.value), r.smoothing.isInverse || false, PCT_MAX);
     smoothingNumber.min = r.smoothing.min;
     smoothingNumber.max = r.smoothing.max;
     smoothingNumber.step = r.smoothing.step;
-    smoothingNumber.value = r.smoothing.value;
+    smoothingNumber.value = parseFloat(r.smoothing.value);
+    const smoothingPctEl = document.getElementById('smoothingPercent');
+    if (smoothingPctEl) smoothingPctEl.textContent = `${parseFloat(smoothingRange.value).toFixed(0)}%`;
+
     // deadzone (steering low)
     deadzoneLowRange.min = r.deadzone_low.min;
     deadzoneLowRange.max = r.deadzone_low.max;
@@ -115,14 +198,17 @@ function applyGameConfig(gameKey) {
     brakeHighNumber.value = r.deadzone_high.value;
 
     // reduction
-    reductionRange.min = r.reduction.min;
-    reductionRange.max = r.reduction.max;
-    reductionRange.step = r.reduction.step;
-    reductionRange.value = r.reduction.value;
+    // allow up to 200% (stronger effect)
+    reductionRange.min = 0;
+    reductionRange.max = PCT_MAX;
+    reductionRange.step = Math.max(0.01, (r.reduction.step / (r.reduction.max - r.reduction.min)) * PCT_MAX);
+    reductionRange.value = getPercentageFromValue(r.reduction, parseFloat(r.reduction.value), r.reduction.isInverse || false, PCT_MAX);
     reductionNumber.min = r.reduction.min;
     reductionNumber.max = r.reduction.max;
     reductionNumber.step = r.reduction.step;
-    reductionNumber.value = r.reduction.value;
+    reductionNumber.value = parseFloat(r.reduction.value);
+    const reductionPctEl = document.getElementById('reductionPercent');
+    if (reductionPctEl) reductionPctEl.textContent = `${parseFloat(reductionRange.value).toFixed(0)}%`;
 
     // reset disables and apply their change handler
     smoothingDisable.checked = false;
@@ -264,13 +350,32 @@ function makeMiniChart(canvasEl, color) {
 	return new Chart(ctx, {
 		type: 'line',
 		data: {
-			labels: Array.from({ length: 101 }, (_, i) => (i / 100).toFixed(2)),
+			labels: Array.from({ length: 101 }, (_, i) => parseFloat((i / 100).toFixed(2))),
 			datasets: [{ data: [], borderColor: color, borderWidth: 2, pointRadius: 0 }]
 		},
 		options: {
 			animation: false,
-			maintainAspectRatio: false,
-			scales: { x: { display: false }, y: { display: true, min: 0, max: 1 } },
+			aspectRatio: 1,
+			scales: {
+                x: {
+					display: true,
+					min: 0,
+					max: 1,
+					grid: { color: '#adb5bd50' },
+					ticks: {
+						callback: function(value) { return parseFloat(value/100).toString(); }
+					}
+				},
+                y: {
+					display: true,
+					min: 0,
+					max: 1,
+					grid: { color: '#adb5bd50' },
+					ticks: {
+						callback: function(value) { return parseFloat(value).toString(); }
+					}
+				}
+            },
 			plugins: { legend: { display: false }, tooltip: { enabled: false } }
 		}
 	});
@@ -325,6 +430,39 @@ const syncPair = (rangeEl, numEl, disableEl = null) => {
     }
 };
 
+// helper to sync a percentage slider (0-100) with a raw-number input using gameConfigs ranges
+function syncPercentPair(percentRangeEl, percentLabelEl, numEl, disableEl = null, getCfgRange = () => null) {
+    const updateLabel = (v) => { if (percentLabelEl) percentLabelEl.textContent = `${parseFloat(v).toFixed(0)}%`; };
+
+    percentRangeEl.addEventListener('input', () => {
+        const cfg = getCfgRange();
+        if (!cfg) return;
+        const percentMax = parseFloat(percentRangeEl.max) || 100;
+        const raw = getValueFromPercentage(cfg, parseFloat(percentRangeEl.value), cfg.isInverse || false, percentMax);
+        if (!disableEl || !disableEl.checked) numEl.value = raw;
+        updateLabel(percentRangeEl.value);
+        updatePreview();
+    });
+
+    numEl.addEventListener('input', () => {
+        const cfg = getCfgRange();
+        if (!cfg) return;
+        const percentMax = parseFloat(percentRangeEl.max) || 100;
+        const pct = getPercentageFromValue(cfg, parseFloat(numEl.value || cfg.min), cfg.isInverse || false, percentMax);
+        if (!disableEl || !disableEl.checked) percentRangeEl.value = pct;
+        updateLabel(percentRangeEl.value);
+        updatePreview();
+    });
+
+    if (disableEl) {
+        disableEl.addEventListener('change', () => {
+            const disabled = disableEl.checked;
+            percentRangeEl.disabled = disabled;
+            numEl.disabled = disabled;
+        });
+    }
+}
+
 const smoothingRange = document.getElementById('smoothingRange');
 const smoothingNumber = document.getElementById('smoothingNumber');
 const smoothingDisable = document.getElementById('smoothingDisable');
@@ -377,22 +515,38 @@ const resetBtn = document.getElementById('resetBtn');
 // declare chart holders early so they're defined before any preview/update runs
 let deadzoneCharts = { steer: null, throttle: null, brake: null };
 
-syncPair(smoothingRange, smoothingNumber, smoothingDisable);
+// steering smoothing
+syncPercentPair(
+    smoothingRange,
+    document.getElementById('smoothingPercent'),
+    smoothingNumber,
+    smoothingDisable,
+    () => gameConfigs[gameSelect.value]?.ranges.smoothing
+);
+
+// steering deadzone
 syncPair(deadzoneLowRange, deadzoneLowNumber, deadzoneLowDisable);
 syncPair(deadzoneMidRange, deadzoneMidNumber);
 syncPair(deadzoneHighRange, deadzoneHighNumber, deadzoneHighDisable);
 
-// new sync pairs for throttle (with mid)
+// throttle deadzone
 syncPair(throttleLowRange, throttleLowNumber, throttleLowDisable);
 syncPair(throttleMidRange, throttleMidNumber);
 syncPair(throttleHighRange, throttleHighNumber, throttleHighDisable);
 
-// new sync pairs for brake (with mid)
+// brake deadzone
 syncPair(brakeLowRange, brakeLowNumber, brakeLowDisable);
 syncPair(brakeMidRange, brakeMidNumber);
 syncPair(brakeHighRange, brakeHighNumber, brakeHighDisable);
 
-syncPair(reductionRange, reductionNumber, reductionDisable);
+// steering reduction (percent slider -> raw value)
+syncPercentPair(
+    reductionRange,
+    document.getElementById('reductionPercent'),
+    reductionNumber,
+    reductionDisable,
+    () => gameConfigs[gameSelect.value]?.ranges.reduction
+);
 
 // wire inputs to live update
 [
@@ -413,13 +567,13 @@ syncPair(reductionRange, reductionNumber, reductionDisable);
 	el.addEventListener(ev, updatePreview);
 });
 
-// when game changes apply its config then update preview
+// game change update
 gameSelect.addEventListener('change', () => {
     applyGameConfig(gameSelect.value);
     updatePreview();
 });
 
-// reset button: restore current game's defaults (does not refresh page form action)
+// reset button
 if (resetBtn) {
     resetBtn.addEventListener('click', () => {
         applyGameConfig(gameSelect.value);
@@ -445,14 +599,14 @@ if (downloadBtn) {
     });
 }
 
-// initialize disabled state, apply initial game config and populate preview
+// initial game config
 [smoothingDisable, deadzoneLowDisable, deadzoneHighDisable,
 	throttleLowDisable, throttleHighDisable, brakeLowDisable, brakeHighDisable,
 	reductionDisable].forEach(cb => cb.dispatchEvent(new Event('change')));
 applyGameConfig(gameSelect.value);
 
 
-// init charts after DOM elements exist and then render preview once
+// init charts
 initDeadzoneCharts();
 updatePreview();
 

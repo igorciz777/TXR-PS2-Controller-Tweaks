@@ -24,7 +24,7 @@
         <div class="container mb-5">
             <div class="row align-equal">
                 <!-- Left: form controls -->
-                <div class="col-12 col-md-6 form-col">
+                <div class="col-12 col-md-4 form-col">
                     <form id="tweaksForm" class="row g-3">
                         <!-- Game Selection Dropdown -->
                         <div class="mb-4">
@@ -41,8 +41,8 @@
                                     <option value="kr1">Kaido Racer (EU)</option>
                                 </optgroup> -->
                                 <optgroup label="Kaido Battle 3">
-                                    <!-- <option value="kb3">Kaido Battle 3 (JP)</option>
-                                    <option value="kr2">Kaido Racer 2 (EU)</option> -->
+                                    <option value="kb3">Kaido Battle 3 (JP)</option>
+                                    <option value="kr2">Kaido Racer 2 (EU)</option>
                                     <option value="txrd2">TXR: Drift 2 (US)</option>
                                 </optgroup>
                                 <!--
@@ -59,6 +59,9 @@
                         <!-- Steering Smoothing and Reduction-->
                         <fieldset class="col-12 border rounded p-3">
                             <legend class="h6">Steering Smoothing</legend>
+                            <div class="small text-muted text-end mb-1">
+                                <span id="smoothingPercent">50%</span>
+                            </div>
                             <div class="mb-2">
                                 <input id="smoothingRange" type="range" class="form-range" min="0" max="2" step="0.01"
                                     value="0.50">
@@ -66,7 +69,7 @@
                             <div class="input-group mb-2">
                                 <input id="smoothingNumber" type="number" class="form-control" min="0" max="2"
                                     step="0.01" value="0.50">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="smoothingDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable smoothing">
                                     <label for="smoothingDisable" class="mb-0 ms-2">Disable</label>
@@ -74,6 +77,9 @@
                             </div>
                             <br/>
                             <legend class="h6">Steering Reduction Effect</legend>
+                            <div class="small text-muted text-end mb-1">
+                                <span id="reductionPercent">50%</span>
+                            </div>
                             <div class="mb-2">
                                 <input id="reductionRange" type="range" class="form-range" min="0" max="20" step="0.1"
                                     value="1.80">
@@ -81,7 +87,7 @@
                             <div class="input-group mb-2">
                                 <input id="reductionNumber" type="number" class="form-control" min="0" max="20"
                                     step="0.1" value="1.80">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="reductionDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable reduction">
                                     <label for="reductionDisable" class="mb-0 ms-2">Disable</label>
@@ -102,7 +108,7 @@
                             <div class="input-group mb-2">
                                 <input id="deadzoneLowNumber" type="number" class="form-control" min="0" max="1"
                                     step="0.01" value="0.05">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="deadzoneLowDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable deadzone low">
                                     <label for="deadzoneLowDisable" class="mb-0 ms-2">Disable</label>
@@ -129,7 +135,7 @@
                             <div class="input-group mb-2">
                                 <input id="deadzoneHighNumber" type="number" class="form-control" min="0" max="1"
                                     step="0.01" value="1.00">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="deadzoneHighDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable deadzone high">
                                     <label for="deadzoneHighDisable" class="mb-0 ms-2">Disable</label>
@@ -150,7 +156,7 @@
                             <div class="input-group mb-2">
                                 <input id="throttleLowNumber" type="number" class="form-control" min="0" max="1"
                                     step="0.01" value="0.05">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="throttleLowDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable throttle low">
                                     <label for="throttleLowDisable" class="mb-0 ms-2">Disable</label>
@@ -177,7 +183,7 @@
                             <div class="input-group mb-2">
                                 <input id="throttleHighNumber" type="number" class="form-control" min="0" max="1"
                                     step="0.01" value="1.00">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="throttleHighDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable throttle high">
                                     <label for="throttleHighDisable" class="mb-0 ms-2">Disable</label>
@@ -198,7 +204,7 @@
                             <div class="input-group mb-2">
                                 <input id="brakeLowNumber" type="number" class="form-control" min="0" max="1"
                                     step="0.01" value="0.05">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="brakeLowDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable brake low">
                                     <label for="brakeLowDisable" class="mb-0 ms-2">Disable</label>
@@ -225,7 +231,7 @@
                             <div class="input-group mb-2">
                                 <input id="brakeHighNumber" type="number" class="form-control" min="0" max="1"
                                     step="0.01" value="1.00">
-                                <div class="input-group-text">
+                                <div class="input-group-text d-none">
                                     <input id="brakeHighDisable" class="form-check-input ms-1" type="checkbox"
                                         aria-label="Disable brake high">
                                     <label for="brakeHighDisable" class="mb-0 ms-2">Disable</label>
@@ -236,7 +242,7 @@
                 </div>
 
                 <!-- Right: live preview -->
-                <div class="col-12 col-md-6 preview-col">
+                <div class="col-12 col-md-8 preview-col">
                     <div class="mb-3">
                         <h5 class="mt-3">Deadzone Preview</h5>
                         <!-- three small charts: Steering, Throttle, Brake -->
