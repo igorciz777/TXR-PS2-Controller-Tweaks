@@ -1,27 +1,41 @@
 // TXR DRIFT 1
-[Disable Smooth Steering]
+[Steering\Smooth Steering (Choose one)\Reduce Smooth Steering]
+description=Removes smooth steering filtering
+author=igorciz777
+patch=0,EE,1015b1e4,extended,3cff // default value 3c88 
+
+[Steering\Smooth Steering (Choose one)\Remove Smooth Steering]
 description=Removes smooth steering filtering
 author=igorciz777
 patch=0,EE,1015b1e4,extended,3d80 // default value 3c88 
 
-[Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
+[Steering\Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
 description=Reduces the speed-based steering reduction effect
 author=igorciz777
 // halfs the effect's strength
 patch=0,EE,1017ccac,extended,44E1 // 1800.0
 
-[Steering Reduction (Choose one)\Disable Speed Steering Reduction]
+[Steering\Steering Reduction (Choose one)\Disable Speed Steering Reduction]
 description=Completely disables the speed-based steering reduction effect
 author=igorciz777
 patch=0,EE,1017ccac,extended,3F80 // 1.0
 
-[Deadzone (Choose one)\Reduce Steering Deadzone]
+[Steering\Deadzone (Choose one)\Reduce Steering Deadzone]
 description=Reduces the steering deadzone to minimum
 author=igorciz777
 // Deadzone low
 patch=0,EE,101862f0,extended,3d4c // 0.05
+patch=0,EE,101862f4,extended,cccd
+// Deadzone mid
+patch=0,EE,1018630c,extended,3f00 // 0.5
+patch=0,EE,10186310,extended,0000
+// Deadzone high
+patch=0,EE,1018632c,extended,3ee6 // mid - low
+patch=0,EE,10186330,extended,6666
+patch=0,EE,1018630c,extended,3ee6 // high - mid
+patch=0,EE,10186310,extended,6666
 
-[Deadzone (Choose one)\Disable Steering Deadzone]
+[Steering\Deadzone (Choose one)\Disable Steering Deadzone]
 description=Disables the steering deadzone completely
 author=igorciz777
 // Deadzone low
@@ -30,3 +44,62 @@ patch=0,EE,101862f4,extended,0000
 // Deadzone mid
 patch=0,EE,1018630c,extended,3f00 // 0.5
 patch=0,EE,10186310,extended,0000
+// Deadzone high
+patch=0,EE,1018632c,extended,3f00 // mid - low
+patch=0,EE,10186330,extended,0000
+patch=0,EE,1018630c,extended,3f00 // high - mid
+patch=0,EE,10186310,extended,0000
+
+[Throttle/Brake\Deadzone (Choose one)\Reduce Throttle/Brake Deadzone]
+description=Reduces the throttle and brake deadzone to minimum
+author=igorciz777
+// Throttle
+// Disable deadzone beq
+patch=0,EE,00186180,word,00000000
+// Deadzone low
+patch=0,EE,10186188,extended,3d4c // 0.05
+patch=0,EE,10186190,extended,cccd
+// Deadzone mid
+patch=0,EE,1018618c,extended,3f00 // 0.5
+patch=0,EE,10186194,extended,0000
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,101861cc,extended,3f66 // 0.9
+
+// Brake
+// Disable deadzone beq
+patch=0,EE,00185ea0,word,00000000
+// Deadzone low
+patch=0,EE,10185ea8,extended,3d4c // 0.05
+patch=0,EE,10185eb0,extended,cccd
+// Deadzone mid
+patch=0,EE,10185eac,extended,3f00 // 0.5
+patch=0,EE,10185eb4,extended,0000
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,10185eec,extended,3f66 // 0.9
+
+[Throttle/Brake\Deadzone (Choose one)\Disable Throttle/Brake Deadzone]
+description=Disables the throttle and brake deadzone completely
+author=igorciz777
+// Throttle
+// Disable deadzone beq
+patch=0,EE,00186180,word,00000000
+// Deadzone low
+patch=0,EE,10186188,extended,0000 // 0.0
+patch=0,EE,10186190,extended,0000
+// Deadzone mid
+patch=0,EE,1018618c,extended,3f00 // 0
+patch=0,EE,10186194,extended,0000
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,101861cc,extended,3f80 // 1.0
+
+// Brake
+// Disable deadzone beq
+patch=0,EE,00185ea0,word,00000000
+// Deadzone low
+patch=0,EE,10185ea8,extended,0000 // 0.0
+patch=0,EE,10185eb0,extended,0000
+// Deadzone mid
+patch=0,EE,10185eac,extended,3f00 // 0.5
+patch=0,EE,10185eb4,extended,0000
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,10185eec,extended,3f80 // 1.0
