@@ -1,21 +1,27 @@
 // RACING BATTLE C1 GRAND PRIX
-[Disable Smooth Steering]
+[Steering\Smooth Steering (Choose one)\Reduce Smooth Steering]
 description=Removes smooth steering filtering
 author=igorciz777
+patch=0,EE,1020C0CC,extended,4170 // response setting multiplier, default 30
+
+[Steering\Smooth Steering (Choose one)\Remove Smooth Steering]
+description=Removes smooth steering filtering
+author=igorciz777
+patch=0,EE,1020C0CC,extended,3F80 // response setting multiplier, default 30
 patch=0,EE,00179AD4,word,00000000
 
-[Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
+[Steering\Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
 description=Reduces the speed-based steering reduction effect
 author=igorciz777
 // halfs the effect's strength
 patch=0,EE,101761a4,extended,3FE6 // 1.8
 
-[Steering Reduction (Choose one)\Disable Speed Steering Reduction]
+[Steering\Steering Reduction (Choose one)\Disable Speed Steering Reduction]
 description=Completely disables the speed-based steering reduction effect
 author=igorciz777
 patch=0,EE,101761a4,extended,0000 // 0.0
 
-[Deadzone (Choose one)\Reduce Steering Deadzone]
+[Steering\Deadzone (Choose one)\Reduce Steering Deadzone]
 description=Reduces the steering deadzone to minimum
 author=igorciz777
 // Deadzone low
@@ -23,10 +29,40 @@ patch=0,EE,0049da00,word,3d4ccccd // 0.05
 // Deadzone high
 patch=0,EE,0049da08,word,3f733333 // 0.95
 
-[Deadzone (Choose one)\Disable Steering Deadzone]
+[Steering\Deadzone (Choose one)\Disable Steering Deadzone]
 description=Disables the steering deadzone completely
 author=igorciz777
 // Deadzone low
 patch=0,EE,0049da00,word,00000000 // 0.0
 // Deadzone high
 patch=0,EE,0049da08,word,3f800000 // 1.0
+
+[Throttle/Brake\Deadzone (Choose one)\Reduce Throttle/Brake Deadzone]
+description=Reduces the throttle and brake deadzone to minimum
+author=igorciz777
+// Throttle
+// Deadzone low
+patch=0,EE,0049da10,word,3d4ccccd // 0.05
+// Deadzone high
+patch=0,EE,0049da18,word,3f733333 // 0.95
+
+// Brake
+// Deadzone low
+patch=0,EE,0049da20,word,3d4ccccd // 0.05
+// Deadzone high
+patch=0,EE,0049da28,word,3f733333 // 0.95
+
+[Throttle/Brake\Deadzone (Choose one)\Disable Throttle/Brake Deadzone]
+description=Disables the throttle and brake deadzone completely
+author=igorciz777
+// Throttle
+// Deadzone low
+patch=0,EE,0049da10,word,00000000 // 0.0
+// Deadzone high
+patch=0,EE,0049da18,word,3f800000 // 1.0
+
+// Brake
+// Deadzone low
+patch=0,EE,0049da20,word,00000000 // 0.0
+// Deadzone high
+patch=0,EE,0049da28,word,3f800000 // 1.0
