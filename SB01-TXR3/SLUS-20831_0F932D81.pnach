@@ -1,21 +1,26 @@
 // TOKYO XTREME RACER 3
-[Disable Smooth Steering]
+[Steering\Smooth Steering (Choose one)\Reduce Smooth Steering]
+description=Reduces smooth steering filtering
+author=igorciz777
+patch=0,EE,0032d258,word,3f800000 // smoothing multiplier, default 0.15166666
+
+[Steering\Smooth Steering (Choose one)\Remove Smooth Steering]
 description=Removes smooth steering filtering
 author=igorciz777
 patch=0,EE,0018E704,word,00000000
 
-[Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
+[Steering\Steering Reduction (Choose one)\Reduce Speed Steering Reduction]
 description=Reduces the speed-based steering reduction effect
 author=igorciz777
 // halfs the effect's strength
 patch=0,EE,10272D14,extended,3FE6 // 1.8
 
-[Steering Reduction (Choose one)\Disable Speed Steering Reduction]
+[Steering\Steering Reduction (Choose one)\Disable Speed Steering Reduction]
 description=Completely disables the speed-based steering reduction effect
 author=igorciz777
 patch=0,EE,10272D14,extended,0000 // 0.0
 
-[Deadzone (Choose one)\Reduce Steering Deadzone]
+[Steering\Deadzone (Choose one)\Reduce Steering Deadzone]
 description=Reduces the steering deadzone to minimum
 author=igorciz777
 //Deadzone low
@@ -24,7 +29,7 @@ patch=0,EE,1018ebb0,extended,cccd
 patch=0,EE,1018ebdc,extended,3d4c // 0.05
 patch=0,EE,1018ebe0,extended,cccd
 
-[Deadzone (Choose one)\Disable Steering Deadzone]
+[Steering\Deadzone (Choose one)\Disable Steering Deadzone]
 description=Disables the steering deadzone completely
 author=igorciz777
 //Deadzone low
