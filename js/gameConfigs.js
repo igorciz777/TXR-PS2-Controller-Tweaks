@@ -550,4 +550,199 @@ patch=0,EE,003d6bb0,word,{{BRAKE_MID}}
 patch=0,EE,003d6bb4,word,{{BRAKE_HIGH}}
         `
     },
+    sb01: {
+        label: 'Shutokou Battle 01',
+        filename: 'SLPM-65308_DD70E38F.pnach',
+        ranges: {
+            smoothing: { min: 0.037916665, max: 1, step: 0.00001, value: '0.15166666', isInverse: true },
+            reduction: { min: 0.0, max: 7.2, step: 0.1, value: '3.6', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
+            midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
+        },
+        pnachTemplate:
+`// SHUTOKOU BATTLE 01
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,0032cdd8,word,{{SMOOTHING}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,10272784,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+//Deadzone low
+patch=0,EE,1018ef9c,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,1018efa0,extended,{{DEADZONE_LOW_HI}}
+patch=0,EE,1018efcc,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,1018efd0,extended,{{DEADZONE_LOW_HI}}
+
+//Deadzone high
+patch=0,EE,1018efa4,extended,{{DEADZONE_HIGH_LO}}
+patch=0,EE,1018efa8,extended,{{DEADZONE_HIGH_HI}}
+patch=0,EE,1018efd4,extended,{{DEADZONE_HIGH_LO}}
+patch=0,EE,1018efd8,extended,{{DEADZONE_HIGH_HI}}
+
+// No throttle/brake deadzone adjustment yet
+`
+    },
+    txr3: {
+        label: 'Tokyo Xtreme Racer 3',
+        filename: 'SLUS-20831_0F932D81.pnach',
+        ranges: {
+            smoothing: { min: 0.037916665, max: 1, step: 0.00001, value: '0.15166666', isInverse: true },
+            reduction: { min: 0.0, max: 7.2, step: 0.1, value: '3.6', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
+            midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
+        },
+        pnachTemplate:
+`// TOKYO XTREME RACER 3
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,0032d258,word,{{SMOOTHING}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,10272D14,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+//Deadzone low
+patch=0,EE,1018ebac,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,1018ebb0,extended,{{DEADZONE_LOW_HI}}
+patch=0,EE,1018ebdc,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,1018ebe0,extended,{{DEADZONE_LOW_HI}}
+
+//Deadzone high
+patch=0,EE,1018ebb4,extended,{{DEADZONE_HIGH_LO}}
+patch=0,EE,1018ebb8,extended,{{DEADZONE_HIGH_HI}}
+patch=0,EE,1018ebe4,extended,{{DEADZONE_HIGH_LO}}
+patch=0,EE,1018ebe8,extended,{{DEADZONE_HIGH_HI}}
+
+// No throttle/brake deadzone adjustment yet
+`
+    },
+    txr3wf: {
+        label: 'Tokyo Xtreme Racer 3 (Whirlwind Fanfare fix)',
+        filename: 'SLUS-20831_0F9348FF.pnach',
+        ranges: {
+            smoothing: { min: 0.037916665, max: 1, step: 0.00001, value: '0.15166666', isInverse: true },
+            reduction: { min: 0.0, max: 7.2, step: 0.1, value: '3.6', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
+            midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
+        },
+        pnachTemplate:
+`// TOKYO XTREME RACER 3 (Whirlwind Fanfare fix)
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,0032d258,word,{{SMOOTHING}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,10272D14,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+//Deadzone low
+patch=0,EE,1018ebac,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,1018ebb0,extended,{{DEADZONE_LOW_HI}}
+patch=0,EE,1018ebdc,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,1018ebe0,extended,{{DEADZONE_LOW_HI}}
+
+//Deadzone high
+patch=0,EE,1018ebb4,extended,{{DEADZONE_HIGH_LO}}
+patch=0,EE,1018ebb8,extended,{{DEADZONE_HIGH_HI}}
+patch=0,EE,1018ebe4,extended,{{DEADZONE_HIGH_LO}}
+patch=0,EE,1018ebe8,extended,{{DEADZONE_HIGH_HI}}
+
+// No throttle/brake deadzone adjustment yet
+`
+    },
+    rbc1: {
+        label: 'Racing Battle C1 Grand Prix',
+        filename: 'SLPM-65897_1C087362.pnach',
+        ranges: {
+            smoothing: { min: 1, max: 60, step: 1, value: '30', isInverse: false },
+            reduction: { min: 0.0, max: 7.2, step: 0.1, value: '3.6', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
+            midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
+        },
+        pnachTemplate:
+`// RACING BATTLE C1 GRAND PRIX
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,1020C0CC,extended,{{SMOOTHING_LO}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,101761a4,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+// Deadzone low
+patch=0,EE,0049da00,word,{{DEADZONE_LOW}}
+// Deadzone high
+patch=0,EE,0049da08,word,{{DEADZONE_HIGH}}
+
+[Throttle/Brake\\Deadzone]
+description=Throttle and brake input deadzone
+// Throttle
+// Deadzone low
+patch=0,EE,0049da10,word,{{THROTTLE_LOW}}
+// Deadzone high
+patch=0,EE,0049da18,word,{{THROTTLE_HIGH}}
+
+// Brake
+// Deadzone low
+patch=0,EE,0049da20,word,{{BRAKE_LOW}}
+// Deadzone high
+patch=0,EE,0049da28,word,{{BRAKE_HIGH}}
+`
+    },
+    rbc1tl: {
+        label: 'Racing Battle C1GP English Patch',
+        filename: 'SLPM-65897_9C4C9611.pnach',
+        ranges: {
+            smoothing: { min: 1, max: 60, step: 1, value: '30', isInverse: false },
+            reduction: { min: 0.0, max: 7.2, step: 0.1, value: '3.6', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
+            midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
+        },
+        pnachTemplate:
+`// RACING BATTLE C1 GRAND PRIX (English Patch)
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,1020C0CC,extended,{{SMOOTHING_LO}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,101761a4,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+// Deadzone low
+patch=0,EE,0049da00,word,{{DEADZONE_LOW}}
+// Deadzone high
+patch=0,EE,0049da08,word,{{DEADZONE_HIGH}}
+
+[Throttle/Brake\\Deadzone]
+description=Throttle and brake input deadzone
+// Throttle
+// Deadzone low
+patch=0,EE,0049da10,word,{{THROTTLE_LOW}}
+// Deadzone high
+patch=0,EE,0049da18,word,{{THROTTLE_HIGH}}
+
+// Brake
+// Deadzone low
+patch=0,EE,0049da20,word,{{BRAKE_LOW}}
+// Deadzone high
+patch=0,EE,0049da28,word,{{BRAKE_HIGH}}
+`
+    },
 };
