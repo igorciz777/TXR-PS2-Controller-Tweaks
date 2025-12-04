@@ -229,6 +229,11 @@ function generatePnachPreview(gameKey, values) {
         '{{DEADZONE_MID_LO}}': values.deadzoneMidDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneMid), 0, 4) || '0000',
         '{{DEADZONE_MID_HI}}': values.deadzoneMidDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneMid), 4, 8) || '0000',
 
+        '{{DEADZONE_MID_M_LOW_LO}}': values.deadzoneMidDisabled || values.deadzoneLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneMid) - parseFloat(values.deadzoneLow), 0, 4),
+        '{{DEADZONE_MID_M_LOW_HI}}': values.deadzoneMidDisabled || values.deadzoneLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneMid) - parseFloat(values.deadzoneLow), 4, 8),
+        '{{DEADZONE_HIGH_M_MID_LO}}': values.deadzoneHighDisabled || values.deadzoneMidDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneHigh) - parseFloat(values.deadzoneMid), 0, 4),
+        '{{DEADZONE_HIGH_M_MID_HI}}': values.deadzoneHighDisabled || values.deadzoneMidDisabled ? 'DISABLED' : floatToHex(parseFloat(values.deadzoneHigh) - parseFloat(values.deadzoneMid), 4, 8),
+
         // reduction
         '{{REDUCTION}}': values.reductionDisabled ? 'DISABLED' : floatToHex(parseFloat(values.reduction), 0, 8),
         '{{REDUCTION_LO}}': values.reductionDisabled ? 'DISABLED' : floatToHex(parseFloat(values.reduction), 0, 4),
@@ -247,6 +252,9 @@ function generatePnachPreview(gameKey, values) {
         '{{THROTTLE_HIGH_LO}}': values.throttleHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.throttleHigh), 0, 4),
         '{{THROTTLE_HIGH_HI}}': values.throttleHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.throttleHigh), 4, 8),
 
+        '{{THROTTLE_MID_M_LOW_LO}}': values.throttleMidDisabled || values.throttleLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.throttleMid) - parseFloat(values.throttleLow), 0, 4),
+        '{{THROTTLE_MID_M_LOW_HI}}': values.throttleMidDisabled || values.throttleLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.throttleMid) - parseFloat(values.throttleLow), 4, 8),
+
         // brake
         '{{BRAKE_LOW}}': values.brakeLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeLow), 0, 8),
         '{{BRAKE_LOW_LO}}': values.brakeLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeLow), 0, 4),
@@ -258,7 +266,10 @@ function generatePnachPreview(gameKey, values) {
 
         '{{BRAKE_HIGH}}': values.brakeHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeHigh), 0, 8),
         '{{BRAKE_HIGH_LO}}': values.brakeHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeHigh), 0, 4),
-        '{{BRAKE_HIGH_HI}}': values.brakeHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeHigh), 4, 8)
+        '{{BRAKE_HIGH_HI}}': values.brakeHighDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeHigh), 4, 8),
+
+        '{{BRAKE_MID_M_LOW_LO}}': values.brakeMidDisabled || values.brakeLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeMid) - parseFloat(values.brakeLow), 0, 4),
+        '{{BRAKE_MID_M_LOW_HI}}': values.brakeMidDisabled || values.brakeLowDisabled ? 'DISABLED' : floatToHex(parseFloat(values.brakeMid) - parseFloat(values.brakeLow), 4, 8)
     };
     let out = tpl;
     for (const key in subs) out = out.replace(new RegExp(key, 'g'), subs[key]);
