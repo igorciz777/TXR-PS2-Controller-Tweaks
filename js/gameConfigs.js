@@ -5,37 +5,184 @@ const gameConfigs = {
         label: 'Kaido Battle 1',
         filename: 'SLPM-65246_2046216F.pnach',
         ranges: {
-            smoothing: { min: 0.01, max: 1, step: 0.01, value: '0.06', isInverse: false },
-            reduction: { min: 1, max: 36, step: 0.1, value: '18.0', isInverse: true },
-            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.05', isInverse: false },
+            smoothing: { min: 0.0020825, max: 0.0625, step: 0.00001, value: '0.01666', isInverse: true },
+            reduction: { min: 0, max: 7200, step: 100, value: '3600', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
             midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
-            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.95', isInverse: false }
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
         },
-        pnachTemplate: ``
+        pnachTemplate: 
+`// KAIDOU BATTLE NIKKO HARUNA ROKKO HAKONE (KB1)
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,10186630,extended,{{SMOOTHING_LO}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,101A505C,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+// Deadzone low
+patch=0,EE,101AF4D0,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,101af4d4,extended,{{DEADZONE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,101af4ec,extended,{{DEADZONE_MID_LO}}
+patch=0,EE,101af4fc,extended,{{DEADZONE_MID_HI}}
+// Deadzone high
+patch=0,EE,101af518,extended,{{DEADZONE_MID_M_LOW_LO}} // mid - low
+patch=0,EE,101af51c,extended,{{DEADZONE_MID_M_LOW_HI}}
+patch=0,EE,101af548,extended,{{DEADZONE_HIGH_MID_LO}} // high - mid
+patch=0,EE,101af550,extended,{{DEADZONE_HIGH_MID_HI}}
+
+[Throttle/Brake\\Deadzone]
+description=Throttle and brake input deadzone
+// Throttle
+// Disable deadzone beq
+patch=0,EE,001af350,word,00000000
+// Deadzone low
+patch=0,EE,101af358,extended,{{THROTTLE_LOW_LO}}
+patch=0,EE,101af360,extended,{{THROTTLE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,101af35c,extended,{{THROTTLE_MID_LO}}
+patch=0,EE,101af364,extended,{{THROTTLE_MID_HI}}
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,101af3b0,extended,{{THROTTLE_HIGH_LO}}
+
+// Brake
+// Disable deadzone beq
+patch=0,EE,001af060,word,00000000
+// Deadzone low
+patch=0,EE,101af068,extended,{{BRAKE_LOW_LO}}
+patch=0,EE,101af070,extended,{{BRAKE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,101af06c,extended,{{BRAKE_MID_LO}}
+patch=0,EE,101af074,extended,{{BRAKE_MID_HI}}
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,101af0c0,extended,{{BRAKE_HIGH_LO}}
+`
     },
-    kb1kor: {
-        label: 'Kaido Battle 1 (KOR)',
+    kb1kr: {
+        label: 'Kaido Battle 1 (Korea)',
         filename: 'SLKA-25063_E3795E39.pnach',
         ranges: {
-            smoothing: { min: 0.01, max: 1, step: 0.01, value: '0.06', isInverse: false },
-            reduction: { min: 1, max: 36, step: 0.1, value: '18.0', isInverse: true },
-            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.05', isInverse: false },
+            smoothing: { min: 0.0020825, max: 0.0625, step: 0.00001, value: '0.01666', isInverse: true },
+            reduction: { min: 0, max: 7200, step: 100, value: '3600', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
             midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
-            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.95', isInverse: false }
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
         },
-        pnachTemplate: ``
+        pnachTemplate: 
+`// KAIDO BATTLE (Korea)
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,1018f9d0,extended,{{SMOOTHING_LO}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,101b4340,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+// Deadzone low
+patch=0,EE,101bffc0,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,101bffc4,extended,{{DEADZONE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,101bffec,extended,{{DEADZONE_MID_LO}}
+patch=0,EE,101bfff0,extended,{{DEADZONE_MID_HI}}
+// Deadzone high
+patch=0,EE,101c0010,extended,{{DEADZONE_MID_M_LOW_LO}} // mid - low
+patch=0,EE,101c0014,extended,{{DEADZONE_MID_M_LOW_HI}}
+patch=0,EE,101c0048,extended,{{DEADZONE_HIGH_MID_LO}} // high - mid
+patch=0,EE,101c004c,extended,{{DEADZONE_HIGH_MID_HI}}
+
+[Throttle/Brake\\Deadzone]
+description=Throttle and brake input deadzone
+// Throttle
+// Disable deadzone beq
+patch=0,EE,001bfe20,word,00000000
+// Deadzone low
+patch=0,EE,101bfe28,extended,{{THROTTLE_LOW_LO}}
+patch=0,EE,101bfe2c,extended,{{THROTTLE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,101bfe34,extended,{{THROTTLE_MID_LO}}
+patch=0,EE,101bfe38,extended,{{THROTTLE_MID_HI}}
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,101bfebc,extended,{{THROTTLE_HIGH_LO}}
+
+// Brake
+// Disable deadzone beq
+patch=0,EE,001bfaf0,word,00000000
+// Deadzone low
+patch=0,EE,101bfaf8,extended,{{BRAKE_LOW_LO}}
+patch=0,EE,101bfafc,extended,{{BRAKE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,101bfb04,extended,{{BRAKE_MID_LO}}
+patch=0,EE,101bfb08,extended,{{BRAKE_MID_HI}}
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,101bfb8c,extended,{{BRAKE_HIGH_LO}}
+`
     },
     txrd1: {
         label: 'Tokyo Xtreme Racer: Drift',
         filename: 'SLUS-21236_07A4E535.pnach',
         ranges: {
-            smoothing: { min: 0.01, max: 1, step: 0.01, value: '0.06', isInverse: false },
-            reduction: { min: 1, max: 36, step: 0.1, value: '18.0', isInverse: true },
-            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.05', isInverse: false },
+            smoothing: { min: 0.0020825, max: 0.0625, step: 0.00001, value: '0.01666', isInverse: true },
+            reduction: { min: 0, max: 7200, step: 100, value: '3600', isInverse: false },
+            deadzone_low: { min: 0, max: 1, step: 0.01, value: '0.1', isInverse: false },
             midpoint: { min: 0, max: 1, step: 0.01, value: '0.50', isInverse: false  },
-            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.95', isInverse: false }
+            deadzone_high: { min: 0, max: 1, step: 0.01, value: '0.9', isInverse: false }
         },
-        pnachTemplate: ``
+        pnachTemplate: 
+`// TXR DRIFT 1
+[Steering\\Smooth Steering]
+description=Modify smooth steering filtering
+patch=0,EE,1015b1e4,extended,{{SMOOTHING_LO}}
+
+[Steering\\Speed Steering Reduction]
+description=Modify the speed-based steering reduction effect
+patch=0,EE,1017ccac,extended,{{REDUCTION_LO}}
+
+[Steering\\Deadzone]
+description=Steering input deadzone
+// Deadzone low
+patch=0,EE,101862f0,extended,{{DEADZONE_LOW_LO}}
+patch=0,EE,101862f4,extended,{{DEADZONE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,1018630c,extended,{{DEADZONE_MID_LO}}
+patch=0,EE,10186310,extended,{{DEADZONE_MID_HI}}
+// Deadzone high
+patch=0,EE,1018632c,extended,{{DEADZONE_MID_M_LOW_LO}} // mid - low
+patch=0,EE,10186330,extended,{{DEADZONE_MID_M_LOW_HI}}
+patch=0,EE,1018630c,extended,{{DEADZONE_HIGH_MID_LO}} // high - mid
+patch=0,EE,10186310,extended,{{DEADZONE_HIGH_MID_HI}}
+
+[Throttle/Brake\\Deadzone]
+description=Throttle and brake input deadzone
+// Throttle
+// Disable deadzone beq
+patch=0,EE,00186180,word,00000000
+// Deadzone low
+patch=0,EE,10186188,extended,{{THROTTLE_LOW_LO}}
+patch=0,EE,10186190,extended,{{THROTTLE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,1018618c,extended,{{THROTTLE_MID_LO}}
+patch=0,EE,10186194,extended,{{THROTTLE_MID_HI}}
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,101861cc,extended,{{THROTTLE_HIGH_LO}}
+
+// Brake
+// Disable deadzone beq
+patch=0,EE,00185ea0,word,00000000
+// Deadzone low
+patch=0,EE,10185ea8,extended,{{BRAKE_LOW_LO}}
+patch=0,EE,10185eb0,extended,{{BRAKE_LOW_HI}}
+// Deadzone mid
+patch=0,EE,10185eac,extended,{{BRAKE_MID_LO}}
+patch=0,EE,10185eb4,extended,{{BRAKE_MID_HI}}
+// Deadzone high (disabled, acts weird)
+//patch=0,EE,10185eec,extended,{{BRAKE_HIGH_LO}}
+`
     },
     ///// Kaido Battle 2
     kb2: {
