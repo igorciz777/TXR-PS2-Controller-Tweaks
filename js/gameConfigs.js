@@ -32,8 +32,8 @@ patch=0,EE,101af4fc,extended,{{DEADZONE_MID_HI}}
 // Deadzone high
 patch=0,EE,101af518,extended,{{DEADZONE_MID_M_LOW_LO}} // mid - low
 patch=0,EE,101af51c,extended,{{DEADZONE_MID_M_LOW_HI}}
-patch=0,EE,101af548,extended,{{DEADZONE_HIGH_MID_LO}} // high - mid
-patch=0,EE,101af550,extended,{{DEADZONE_HIGH_MID_HI}}
+patch=0,EE,101af548,extended,{{DEADZONE_HIGH_M_MID_LO}} // high - mid
+patch=0,EE,101af550,extended,{{DEADZONE_HIGH_M_MID_HI}}
 
 [Throttle/Brake\\Deadzone]
 description=Throttle and brake input deadzone
@@ -93,8 +93,8 @@ patch=0,EE,101bfff0,extended,{{DEADZONE_MID_HI}}
 // Deadzone high
 patch=0,EE,101c0010,extended,{{DEADZONE_MID_M_LOW_LO}} // mid - low
 patch=0,EE,101c0014,extended,{{DEADZONE_MID_M_LOW_HI}}
-patch=0,EE,101c0048,extended,{{DEADZONE_HIGH_MID_LO}} // high - mid
-patch=0,EE,101c004c,extended,{{DEADZONE_HIGH_MID_HI}}
+patch=0,EE,101c0048,extended,{{DEADZONE_HIGH_M_MID_LO}} // high - mid
+patch=0,EE,101c004c,extended,{{DEADZONE_HIGH_M_MID_HI}}
 
 [Throttle/Brake\\Deadzone]
 description=Throttle and brake input deadzone
@@ -154,8 +154,8 @@ patch=0,EE,10186310,extended,{{DEADZONE_MID_HI}}
 // Deadzone high
 patch=0,EE,1018632c,extended,{{DEADZONE_MID_M_LOW_LO}} // mid - low
 patch=0,EE,10186330,extended,{{DEADZONE_MID_M_LOW_HI}}
-patch=0,EE,1018630c,extended,{{DEADZONE_HIGH_MID_LO}} // high - mid
-patch=0,EE,10186310,extended,{{DEADZONE_HIGH_MID_HI}}
+patch=0,EE,1018630c,extended,{{DEADZONE_HIGH_M_MID_LO}} // high - mid
+patch=0,EE,10186310,extended,{{DEADZONE_HIGH_M_MID_HI}}
 
 [Throttle/Brake\\Deadzone]
 description=Throttle and brake input deadzone
