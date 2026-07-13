@@ -1,4 +1,8 @@
 # TXR PS2 Controller Tweaks
+
+> [!WARNING]
+> Moved to https://github.com/igorciz777/PS2-Configurable-Tweaks
+
 A set of patches that modify the way steering input is handled for:
 - Kaido Battle 1 / TXR: Drift
 - Kaido Battle 2 / Kaido Racer
